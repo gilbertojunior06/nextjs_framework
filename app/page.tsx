@@ -3,6 +3,7 @@ import { Activity, LayoutDashboard, Users, Search, Bell, CheckCircle2, AlertCirc
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { COLORS, dataProducao, dataStatus, maquinas } from '../data/data'
 import { useState, useEffect } from "react";
+import Link from 'next/link';
 
 export default function Home() {
   /*Aqui é a onde estou guardando o que o usuário está digitando */
@@ -46,10 +47,18 @@ export default function Home() {
             <LayoutDashboard size={20} />
             <span>Dashboard</span>
           </a>
+          
           <a href="#" className="nav-item active">
             <Activity size={20} />
             <span>Máquinas</span>
           </a>
+
+          
+          <Link href="/separacao_cores" className="nav-item active">
+          <Activity size={20} />
+          <span>Separação Cores</span>
+          </Link>
+
           <a href="#" className="nav-item active">
             <Users size={20} />
             <span>Equipa</span>
