@@ -1,0 +1,183 @@
+[
+    {
+        "id": "395a6f858483d24d",
+        "type": "tab",
+        "label": "gilberto",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "45e7fd8edd72046f",
+        "type": "inject",
+        "z": "395a6f858483d24d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "2",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "minha_msg",
+        "payload": "object",
+        "payloadType": "date",
+        "x": 300,
+        "y": 160,
+        "wires": [
+            [
+                "3f58529b0d63f16a",
+                "01187cab72413557"
+            ]
+        ]
+    },
+    {
+        "id": "3f58529b0d63f16a",
+        "type": "debug",
+        "z": "395a6f858483d24d",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 560,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "9dec7cc8b5985bc1",
+        "type": "function",
+        "z": "395a6f858483d24d",
+        "name": "PARADA",
+        "func": "// 1. Muda o status para travado\nflow.set(\"status_maquina\", \"STOPPED\");\n\nnode.warn(\"SISTEMA PARADO PELO DASHBOARD\");\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1040,
+        "y": 200,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a23df28fee861767",
+        "type": "websocket out",
+        "z": "395a6f858483d24d",
+        "name": "",
+        "server": "0dc8d320f38fba7e",
+        "client": "",
+        "x": 960,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "0411f77e167c9c2d",
+        "type": "switch",
+        "z": "395a6f858483d24d",
+        "name": "",
+        "property": "payload.action",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "| string | STOP",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "| string | RESET",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 850,
+        "y": 280,
+        "wires": [
+            [
+                "9dec7cc8b5985bc1"
+            ],
+            [
+                "dc3cf9c67321f743"
+            ]
+        ]
+    },
+    {
+        "id": "dc3cf9c67321f743",
+        "type": "function",
+        "z": "395a6f858483d24d",
+        "name": "RESERT",
+        "func": "// Tem que ser 'global' para o nó separação enxergar\nglobal.set(\"totalPecas\", 0); \nflow.set(\"status_maquina\", \"RUNNING\");\n\nnode.warn(\"RESETADO PARA ZERO\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1040,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "01187cab72413557",
+        "type": "function",
+        "z": "395a6f858483d24d",
+        "name": "separaçao",
+        "func": "// 1. Busca os valores da gaveta GLOBAL (o caderno compartilhado)\nlet totalPecas = global.get(\"totalPecas\") || 0;\nlet status = flow.get(\"status_maquina\") || \"RUNNING\";\n\nlet ciclo = 0;\nlet acerto = 0;\n\n// 2. LÓGICA DE DECISÃO\nif (status === \"RUNNING\") {\n    // SÓ INCREMENTA SE ESTIVER RODANDO\n    totalPecas += 1; \n    global.set(\"totalPecas\", totalPecas); // Salva de volta no caderno global\n\n    // Gera os dados simulados de produção\n    ciclo = (Math.random() * (4.5 - 3.5) + 3.5).toFixed(1);\n    acerto = (98 + Math.random()).toFixed(1);\n} else {\n    // SE ESTIVER EM 'STOPPED', O CICLO VAI PARA 0 E A CONTAGEM TRAVA\n    ciclo = 0;\n    acerto = 0;\n}\n\n// 3. Prepara o pacote para o Next.js\nmsg.payload = {\n    pecas: totalPecas,\n    ciclo: parseFloat(ciclo),\n    acerto: parseFloat(acerto),\n    status: status\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 360,
+        "wires": [
+            [
+                "a23df28fee861767"
+            ]
+        ]
+    },
+    {
+        "id": "d119a0dfd7d6019a",
+        "type": "websocket in",
+        "z": "395a6f858483d24d",
+        "name": "",
+        "server": "678a32ef0e1fca90",
+        "client": "",
+        "x": 760,
+        "y": 140,
+        "wires": [
+            [
+                "0411f77e167c9c2d"
+            ]
+        ]
+    },
+    {
+        "id": "0dc8d320f38fba7e",
+        "type": "websocket-listener",
+        "path": "/ws/robotica",
+        "wholemsg": "false"
+    },
+    {
+        "id": "678a32ef0e1fca90",
+        "type": "websocket-listener",
+        "path": "/ws/robotica",
+        "wholemsg": "false"
+    }
+]

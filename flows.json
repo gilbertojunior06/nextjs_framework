@@ -1,0 +1,76 @@
+[
+    {
+        "id": "ebcfef6abe9ccd95",
+        "type": "tab",
+        "label": "natalia",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "69fdd786d4b1134a",
+        "type": "inject",
+        "z": "ebcfef6abe9ccd95",
+        "name": "data e hora atual",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "object",
+        "payloadType": "date",
+        "x": 220,
+        "y": 140,
+        "wires": [
+            [
+                "70581c6b66d4030a"
+            ]
+        ]
+    },
+    {
+        "id": "24ed41cfadc15404",
+        "type": "debug",
+        "z": "ebcfef6abe9ccd95",
+        "name": "saida",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "70581c6b66d4030a",
+        "type": "function",
+        "z": "ebcfef6abe9ccd95",
+        "name": "function 1",
+        "func": "// 1. Inicializa ou recupera contadores persistentes\nlet stats = context.get('stats') || { \n    total: 0, \n    sucessos: 0, \n    falhas: 0, \n    estado: \"IDLE\" \n};\n\nconst log = msg.payload.toString();\n\n// 2. Regras de interpretação (Regex ou Includes)\nif (log.includes(\"programa em execução\")) {\n    stats.estado = \"EXECUTANDO\";\n} \nelse if (log.includes(\"programa em home\")) {\n    stats.estado = \"HOME\";\n} \nelse if (log.includes(\"esteira 1 em execução\")) {\n    stats.estado = \"ESTEIRA_ATIVA\";\n}\n\n// 3. Lógica de Contagem de Peças/Ciclos\n// Ajuste os termos abaixo conforme o log real do seu robô\nif (log.includes(\"Ciclo concluído\") || log.includes(\"Peça processada\")) {\n    stats.total++;\n    stats.sucessos++;\n} else if (log.includes(\"Erro\") || log.includes(\"Falha\")) {\n    stats.total++;\n    stats.falhas++;\n    stats.estado = \"ERRO\";\n}\n\n// 4. Cálculo da Taxa de Acerto\nlet taxa = stats.total > 0 ? (stats.sucessos / stats.total) * 100 : 0;\n\n// 5. Salva o progresso no contexto do nó\ncontext.set('stats', stats);\n\n// 6. Prepara o Payload para o Backend Node.js\nmsg.payload = {\n    status_robo: stats.estado,\n    total_pecas: stats.sucessos,\n    total_ciclos: stats.total,\n    taxa_acerto: taxa.toFixed(1) + \"%\",\n    ultimo_log: log\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 160,
+        "wires": [
+            [
+                "24ed41cfadc15404"
+            ]
+        ]
+    }
+]
