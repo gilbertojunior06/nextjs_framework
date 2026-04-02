@@ -28,30 +28,13 @@
         "topic": "",
         "payload": "object",
         "payloadType": "date",
-        "x": 220,
-        "y": 140,
+        "x": 300,
+        "y": 220,
         "wires": [
             [
                 "70581c6b66d4030a"
             ]
         ]
-    },
-    {
-        "id": "24ed41cfadc15404",
-        "type": "debug",
-        "z": "ebcfef6abe9ccd95",
-        "name": "saida",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 810,
-        "y": 200,
-        "wires": []
     },
     {
         "id": "70581c6b66d4030a",
@@ -65,12 +48,54 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 500,
-        "y": 160,
+        "x": 600,
+        "y": 220,
         "wires": [
             [
-                "24ed41cfadc15404"
+                "d4073112ba26c76b",
+                "9dcef204e6080c5d"
             ]
         ]
+    },
+    {
+        "id": "d4073112ba26c76b",
+        "type": "http request",
+        "z": "ebcfef6abe9ccd95",
+        "name": "enviar Dashboard",
+        "method": "POST",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "http://localhost:3001/update-robot",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 790,
+        "y": 360,
+        "wires": [
+            [
+                "9dcef204e6080c5d"
+            ]
+        ]
+    },
+    {
+        "id": "9dcef204e6080c5d",
+        "type": "debug",
+        "z": "ebcfef6abe9ccd95",
+        "name": "saida",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 990,
+        "y": 220,
+        "wires": []
     }
 ]

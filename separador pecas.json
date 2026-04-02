@@ -1,0 +1,163 @@
+[
+    {
+        "id": "6b2bcb505aba75a5",
+        "type": "tab",
+        "label": "separador peça",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5b5d7b3fb53c2e38",
+        "type": "function",
+        "z": "6b2bcb505aba75a5",
+        "name": "separador peça",
+        "func": "// 1. Inicializa ou recupera contadores persistentes\nlet stats = context.get('stats') || {\n    total: 0,\n    sucessos: 0,\n    falhas: 0,\n    estado: \"IDLE\"\n};\n\nconst log = msg.payload.toString();\n\n// 2. Regras de interpretação (Regex ou Includes)\nif (log.includes(\"programa em execução\")) {\n    stats.estado = \"EXECUTANDO\";\n}\nelse if (log.includes(\"programa em home\")) {\n    stats.estado = \"HOME\";\n}\nelse if (log.includes(\"esteira 1 em execução\")) {\n    stats.estado = \"ESTEIRA_ATIVA\";\n}\n\n// 3. Lógica de Contagem de Peças/Ciclos\n// Ajuste os termos abaixo conforme o log real do seu robô\nif (log.includes(\"Ciclo concluído\") || log.includes(\"Peça processada\")) {\n    stats.total++;\n    stats.sucessos++;\n} else if (log.includes(\"Erro\") || log.includes(\"Falha\")) {\n    stats.total++;\n    stats.falhas++;\n    stats.estado = \"ERRO\";\n}\n\n// 4. Cálculo da Taxa de Acerto\nlet taxa = stats.total > 0 ? (stats.sucessos / stats.total) * 100 : 0;\n\n// 5. Salva o progresso no contexto do nó\ncontext.set('stats', stats);\n\n// 6. Prepara o Payload para o Backend Node.js\nmsg.payload = {\n    status_robo: stats.estado,\n    total_pecas: stats.sucessos,\n    total_ciclos: stats.total,\n    taxa_acerto: taxa.toFixed(1) + \"%\",\n    ultimo_log: log\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 160,
+        "wires": [
+            [
+                "e8a0b4e8e177a1b5"
+            ]
+        ]
+    },
+    {
+        "id": "e8a0b4e8e177a1b5",
+        "type": "websocket out",
+        "z": "6b2bcb505aba75a5",
+        "name": "",
+        "server": "9808489310961be9",
+        "client": "",
+        "x": 900,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "a0e672afae079da5",
+        "type": "inject",
+        "z": "6b2bcb505aba75a5",
+        "name": "peca preta",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "3",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "preto",
+        "payloadType": "str",
+        "x": 370,
+        "y": 80,
+        "wires": [
+            [
+                "5b5d7b3fb53c2e38"
+            ]
+        ]
+    },
+    {
+        "id": "50401d50922f4131",
+        "type": "inject",
+        "z": "6b2bcb505aba75a5",
+        "name": "peça cinza",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "10",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "cinza",
+        "payloadType": "str",
+        "x": 370,
+        "y": 260,
+        "wires": [
+            [
+                "5b5d7b3fb53c2e38"
+            ]
+        ]
+    },
+    {
+        "id": "742556af462f38f6",
+        "type": "inject",
+        "z": "6b2bcb505aba75a5",
+        "name": "peça verde",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "4",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "verde",
+        "payloadType": "str",
+        "x": 330,
+        "y": 160,
+        "wires": [
+            [
+                "5b5d7b3fb53c2e38"
+            ]
+        ]
+    },
+    {
+        "id": "ebc61c6f7a13b71e",
+        "type": "inject",
+        "z": "6b2bcb505aba75a5",
+        "name": "erro separaçao",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "error de garra",
+        "payloadType": "str",
+        "x": 380,
+        "y": 340,
+        "wires": [
+            [
+                "5b5d7b3fb53c2e38"
+            ]
+        ]
+    },
+    {
+        "id": "9808489310961be9",
+        "type": "websocket-listener",
+        "path": "/ws/robot",
+        "wholemsg": "false"
+    }
+]

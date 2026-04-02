@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🤖 Dashboard de Monitoramento - Célula Robótica | SENAI Tech
 
-## Getting Started
+Este é um painel de controle industrial em tempo real desenvolvido com **Next.js 14**, **TypeScript** e **Tailwind CSS**. O sistema monitora a produção de uma célula robótica, processando dados de sensores de cores e métricas de eficiência (OEE) via WebSockets.
 
-First, run the development server:
+---
 
+## 🚀 Como Configurar e Rodar o Projeto
+
+Após extrair o arquivo `.zip`, siga os passos abaixo para colocar o dashboard em funcionamento:
+
+### 1. Pré-requisitos
+Certifique-se de ter instalado:
+* **Node.js** (Versão 18.x ou superior)
+* **NPM** (Vem instalado com o Node)
+
+### 2. Instalação de Dependências
+Abra o terminal (PowerShell ou Bash) dentro da pasta do projeto e execute:
 ```bash
+npm install
+
+3. Comunicação com o Robô (Node-RED)
+O dashboard está configurado para receber dados via WebSocket no endereço:
+ws://localhost:1880/ws/robot
+
+Dica: Certifique-se de que seu fluxo no Node-RED esteja ativo e enviando o JSON correto para que as métricas e o status da máquina atualizem automaticamente.
+
+4. Executar o Dashboard
+Para rodar em ambiente de desenvolvimento, utilize o comando:
+
+Bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Agora, abra o navegador e acesse: http://localhost:3000
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🛠️ Tecnologias e Recursos
+Next.js (App Router): Estrutura moderna de alta performance.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+TypeScript: Tipagem estrita para evitar erros de "any" e garantir código limpo.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Tailwind CSS: Design responsivo e estilização industrial customizada.
 
-## Learn More
+Recharts: Gráficos de linha dinâmicos para histórico de peças.
 
-To learn more about Next.js, take a look at the following resources:
+Lucide-React: Conjunto de ícones vetoriais modernos.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+WebSockets: Atualização em tempo real sem necessidade de "refresh" na página.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+📊 Formato de Dados (JSON)
+Para que o painel funcione corretamente, o seu backend/Node-RED deve enviar objetos seguindo este padrão:
 
-## Deploy on Vercel
+JSON
+{
+  "status_robo": "RUNNING",
+  "total_pecas": 1250,
+  "total_falhas": 5,
+  "taxa_acerto": "98.5%",
+  "tempo_ciclo": 4.2,
+  "ultimo_log": "PEÇA PRETA DETECTADA"
+}
+📁 Estrutura do Projeto
+app/page.tsx: Componente principal do dashboard com a lógica de estados e socket.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+tailwind.config.ts: Configurações de cores e temas.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+public/: Ícones e imagens estáticas.
+
+Desenvolvido por Gilberto Junior - SENAI | Tech 🏭

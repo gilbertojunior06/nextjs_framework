@@ -42,7 +42,7 @@ export default function Home() {
           {/* BOTÃO PARA VOLTAR À HOME NA SIDEBAR */}
           <Link href="/" className="nav-item active">
             <LayoutDashboard size={20} />
-            <span>Dashboard Principal</span>
+            <span>Dashboard </span>
           </Link>
           
           <a href="#" className="nav-item">

@@ -1,0 +1,23 @@
+[
+    {
+        "id": "d119a0dfd7d6019a",
+        "type": "websocket in",
+        "z": "395a6f858483d24d",
+        "name": "",
+        "server": "678a32ef0e1fca90",
+        "client": "",
+        "x": 760,
+        "y": 140,
+        "wires": [
+            [
+                "0411f77e167c9c2d"
+            ]
+        ]
+    },
+    {
+        "id": "678a32ef0e1fca90",
+        "type": "websocket-listener",
+        "path": "/ws/robotica",
+        "wholemsg": "false"
+    }
+]
