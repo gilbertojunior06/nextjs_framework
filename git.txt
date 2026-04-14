@@ -1,0 +1,23 @@
+--- COMANDOS RÁPIDOS GIT ---
+
+ENVIAR PARA O GITHUB:
+git add .
+git commit -m "update"
+git push origin main
+
+ATUALIZAR PASTA LOCAL:
+git pull origin main
+
+VERIFICAR STATUS:
+git status
+
+LIMPAR ALTERAÇÕES NÃO SALVAS:
+git checkout .
+
+CONFIGURAÇÃO INICIAL:
+git config --global user.name "Gilberto Junior"
+git config --global user.email "gilbertosilveriojr@gmail.com"
+git config --global core.autocrlf true
+
+VERIFICAR REPOSITÓRIO:
+git remote -v
